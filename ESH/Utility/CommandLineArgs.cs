@@ -29,7 +29,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ESH
+namespace ESH.Utility
 {
     public class CommandLineArgs
     {
