@@ -51,6 +51,12 @@ namespace ESH.Utility
             return type == null ? null : type.Assembly;
         }
 
+        public static string GetCallingAssemblyPath()
+        {
+            var path = Path.GetDirectoryName(new Uri(GetCallingAssembly().CodeBase).LocalPath);
+            return path;
+        }
+
         //Try as hard as possible to get the proper entry assembly
         public static Assembly GetCallingAssembly()
         {
