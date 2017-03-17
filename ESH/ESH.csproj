@@ -56,7 +56,7 @@
     <Compile Include="Utility\ActiveDirectory\ADContext.cs" />
     <Compile Include="Utility\ActiveDirectory\ADGroup.cs" />
     <Compile Include="Utility\ActiveDirectory\ADUser.cs" />
-    <Compile Include="Utility\AssemblyInformation.cs" />
+    <Compile Include="Utility\AssemblyInfo.cs" />
     <Compile Include="Utility\BaseX.cs" />
     <Compile Include="Utility\Email.cs" />
     <Compile Include="Utility\ExceptionFormatter.cs" />
@@ -66,6 +66,8 @@
     <Compile Include="Utility\FileHash.cs" />
     <Compile Include="Utility\ImageUtils.cs" />
     <Compile Include="Utility\Iso8601.cs" />
+    <Compile Include="Utility\LogFile.cs" />
+    <Compile Include="Utility\ReflectionUtils.cs" />
     <Compile Include="Utility\Telnet.cs" />
   </ItemGroup>
   <ItemGroup>

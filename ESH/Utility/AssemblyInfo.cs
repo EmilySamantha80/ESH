@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 
 namespace ESH.Utility
 {
-    public class AssemblyInformation
+    public class AssemblyInfo
     {
         //Gets the entry assembly for web apps
         //http://stackoverflow.com/questions/4277692/getentryassembly-for-web-applications
