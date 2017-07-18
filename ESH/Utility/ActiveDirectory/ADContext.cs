@@ -32,6 +32,7 @@ using System.DirectoryServices.AccountManagement;
 using System.Security;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 /// <summary>
 /// Full featured C# Active Directory client
@@ -82,10 +83,10 @@ namespace ESH.Utility.ActiveDirectory
         /// <summary>
         /// Used for GetNewDirectoryEntry(). It is set when you connect to the server.
         /// </summary>
-        private Principal defaultPrincipal;
+        private Principal _DefaultPrincipal;
 
 
-        private ContextType contextType = ContextType.Domain;
+        private ContextType _ContextType = ContextType.Domain;
         /// <summary>
         /// The ContextType of the current connection to the server.
         /// </summary>
@@ -93,11 +94,11 @@ namespace ESH.Utility.ActiveDirectory
         {
             get
             {
-                return contextType;
+                return _ContextType;
             }
         }
 
-        private string container = String.Empty;
+        private string _Container = String.Empty;
         /// <summary>
         /// The distinguished name of the container that the current connection is bound to
         /// </summary>
@@ -105,11 +106,11 @@ namespace ESH.Utility.ActiveDirectory
         {
             get
             {
-                return container;
+                return _Container;
             }
         }
 
-        private string server = String.Empty;
+        private string _Server = String.Empty;
         /// <summary>
         /// The Active Directory server that is currently connected.
         /// </summary>
@@ -117,11 +118,11 @@ namespace ESH.Utility.ActiveDirectory
         {
             get
             {
-                return server;
+                return _Server;
             }
         }
 
-        private string userName = String.Empty;
+        private string _UserName = String.Empty;
         /// <summary>
         /// The username that was used to connect to the Active Directory Server.
         /// If connected using the applicatoin's credentials, this will be empty.
@@ -130,11 +131,11 @@ namespace ESH.Utility.ActiveDirectory
         {
             get
             {
-                return userName;
+                return _UserName;
             }
         }
 
-        private SecureString password = new SecureString();
+        private SecureString _Password = new SecureString();
         /// <summary>
         /// The password that was used to connect to the Active Directory Server.
         /// If connected using the applicatoin's credentials, this will be empty.
@@ -143,11 +144,11 @@ namespace ESH.Utility.ActiveDirectory
         {
             get
             {
-                return password;
+                return _Password;
             }
         }
 
-        private bool connectedUsingPassword = false;
+        private bool _ConnectedUsingPassword = false;
         /// <summary>
         /// Returns true if connected to the server by specifying a username and password, false if connected using the application's credentials.
         /// </summary>
@@ -155,11 +156,11 @@ namespace ESH.Utility.ActiveDirectory
         {
             get
             {
-                return connectedUsingPassword;
+                return _ConnectedUsingPassword;
             }
         }
 
-        private ContextOptions contextOptions = (ContextOptions.ServerBind | ContextOptions.Negotiate);
+        private ContextOptions _ContextOptions = (ContextOptions.ServerBind | ContextOptions.Negotiate);
         /// <summary>
         /// The ContextOptions that were used to connect to the server.
         /// </summary>
@@ -167,19 +168,19 @@ namespace ESH.Utility.ActiveDirectory
         {
             get
             {
-                return contextOptions;
+                return _ContextOptions;
             }
         }
 
         /// <summary>
         /// The PrincipalContext object that is used for Active Directory operations.
         /// </summary>
-        private PrincipalContext principalContext;
+        private PrincipalContext _PrincipalContext;
         public PrincipalContext PrincipalContext
         {
             get
             {
-                return principalContext;
+                return _PrincipalContext;
             }
         }
 
@@ -208,32 +209,44 @@ namespace ESH.Utility.ActiveDirectory
         /// <param name="contextOptions">The options that are used to bind to the server</param>
         public void Connect(string server, string container, ContextOptions contextOptions)
         {
-            this.server = server;
-            this.container = container;
-            this.userName = String.Empty;
-            this.password = new SecureString();
-            this.contextOptions = contextOptions;
-            this.connectedUsingPassword = false;
+            this._Server = server;
+            this._Container = container;
+            this._UserName = String.Empty;
+            this._Password = new SecureString();
+            this._ContextOptions = contextOptions;
+            this._ConnectedUsingPassword = false;
             Match match = Regex.Match(container, @"(DC\=.*)", RegexOptions.CultureInvariant);
             if (match.Groups.Count > 0)
             {
-                principalContext = new PrincipalContext(this.contextType, this.server, match.Groups[0].Value, this.contextOptions);
-                defaultPrincipal = ADUserPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
-                if (defaultPrincipal == null)
+                _PrincipalContext = new PrincipalContext(this._ContextType, this._Server, match.Groups[0].Value, this._ContextOptions);
+                _DefaultPrincipal = ADUserPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
+                if (_DefaultPrincipal == null)
                 {
-                    defaultPrincipal = ADGroupPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
+                    _DefaultPrincipal = ADGroupPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
                 }
                 ChangeContainer(container);
             }
             else
             {
-                principalContext = new PrincipalContext(this.contextType, this.server, this.container, this.contextOptions);
-                defaultPrincipal = ADUserPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
-                if (defaultPrincipal == null)
+                _PrincipalContext = new PrincipalContext(this._ContextType, this._Server, this._Container, this._ContextOptions);
+                _DefaultPrincipal = ADUserPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
+                if (_DefaultPrincipal == null)
                 {
-                    defaultPrincipal = ADGroupPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
+                    _DefaultPrincipal = ADGroupPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
                 }
             }
+        }
+
+        /// <summary>
+        /// Connects to an Active Directory server specifying the username and password.
+        /// </summary>
+        /// <param name="server">The Active Directory server to connect to.</param>
+        /// <param name="container">The distinguished name of the container to bind to</param>
+        /// <param name="userName">The username to connect using</param>
+        /// <param name="password">The password to connect using</param>
+        public void Connect(string server, string container, string userName, string password)
+        {
+            Connect(server, container, userName, ToSecureString(password));
         }
 
         /// <summary>
@@ -256,40 +269,53 @@ namespace ESH.Utility.ActiveDirectory
         /// <param name="userName">The username to connect using</param>
         /// <param name="password">The password to connect using</param>
         /// <param name="contextOptions">The options that are used to bind to the server</param>
+        public void Connect(string server, string container, string userName, string password, ContextOptions contextOptions)
+        {
+            Connect(server, container, userName, ToSecureString(password), contextOptions);
+        }
+
+        /// <summary>
+        /// Connects to an Active Directory server specifying the username and password.
+        /// </summary>
+        /// <param name="server">The Active Directory server to connect to.</param>
+        /// <param name="container">The distinguished name of the container to bind to</param>
+        /// <param name="userName">The username to connect using</param>
+        /// <param name="password">The password to connect using</param>
+        /// <param name="contextOptions">The options that are used to bind to the server</param>
         public void Connect(string server, string container, string userName, SecureString password, ContextOptions contextOptions)
         {
-            this.server = server;
-            this.container = container;
-            this.userName = userName;
-            this.password = password;
-            this.contextOptions = contextOptions;
-            this.connectedUsingPassword = true;
-            if (contextType != ContextType.Machine)
+            this._Server = server;
+            this._Container = container;
+            this._UserName = userName;
+            this._Password = password;
+            this._ContextOptions = contextOptions;
+            this._ConnectedUsingPassword = true;
+            if (_ContextType != ContextType.Machine)
             {
                 Match match = Regex.Match(container, @"(DC\=.*)", RegexOptions.CultureInvariant);
                 if (match.Groups.Count > 0)
                 {
-                    principalContext = new PrincipalContext(this.contextType, this.server, match.Groups[0].Value, this.contextOptions, this.userName, ToInsecureString(this.password));
-                    defaultPrincipal = ADUserPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
-                    if (defaultPrincipal == null)
+                    _PrincipalContext = new PrincipalContext(this._ContextType, this._Server, match.Groups[0].Value, this._ContextOptions, this._UserName, ToInsecureString(this._Password));
+                    _DefaultPrincipal = ADUserPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
+                    if (_DefaultPrincipal == null)
                     {
-                        defaultPrincipal = ADGroupPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
+                        _DefaultPrincipal = ADGroupPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
                     }
                     ChangeContainer(container);
                 }
                 else
                 {
-                    principalContext = new PrincipalContext(this.contextType, this.server, this.container, this.contextOptions, this.userName, ToInsecureString(this.password));
-                    defaultPrincipal = ADUserPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
-                    if (defaultPrincipal == null)
+                    _PrincipalContext = new PrincipalContext(this._ContextType, this._Server, this._Container, this._ContextOptions, this._UserName, ToInsecureString(this._Password));
+                    _DefaultPrincipal = ADUserPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
+                    if (_DefaultPrincipal == null)
                     {
-                        defaultPrincipal = ADGroupPrincipal.FindOneByAttribute(principalContext, "sAMAccountName", "*");
+                        _DefaultPrincipal = ADGroupPrincipal.FindOneByAttribute(_PrincipalContext, "sAMAccountName", "*");
                     }
                 }
             }
             else
             {
-                principalContext = new PrincipalContext(this.contextType, this.server);
+                _PrincipalContext = new PrincipalContext(this._ContextType, this._Server);
             }
 
         }
@@ -302,7 +328,7 @@ namespace ESH.Utility.ActiveDirectory
             get
             {
                 bool result = false;
-                if (principalContext != null && !String.IsNullOrEmpty(principalContext.ConnectedServer))
+                if (_PrincipalContext != null && !String.IsNullOrEmpty(_PrincipalContext.ConnectedServer))
                 {
                     result = true;
                 }
@@ -316,7 +342,7 @@ namespace ESH.Utility.ActiveDirectory
         /// <returns>A List object containing the returned DirectoryEntry objects.</returns>
         public List<DirectoryEntry> GetDirectoryEntries()
         {
-            return GetDirectoryEntries(SchemaClass.Any, this.container);
+            return GetDirectoryEntries(SchemaClass.Any, this._Container);
         }
 
         /// <summary>
@@ -336,7 +362,7 @@ namespace ESH.Utility.ActiveDirectory
         /// <returns>A List object containing the returned DirectoryEntry objects.</returns>
         public List<DirectoryEntry> GetDirectoryEntries(SchemaClass schemaClass)
         {
-            return GetDirectoryEntries(schemaClass, this.container);
+            return GetDirectoryEntries(schemaClass, this._Container);
         }
 
         /// <summary>
@@ -348,7 +374,7 @@ namespace ESH.Utility.ActiveDirectory
         public List<DirectoryEntry> GetDirectoryEntries(SchemaClass schemaClass, string container)
         {
             var entries = new List<DirectoryEntry>();
-            var principal = new UserPrincipal(principalContext);
+            var principal = new UserPrincipal(_PrincipalContext);
             var baseEntry = GetNewDirectoryEntry(container);
 
             foreach (DirectoryEntry entry in baseEntry.Children)
@@ -388,13 +414,13 @@ namespace ESH.Utility.ActiveDirectory
         /// <param name="container">The distinguished name of the container to bind to</param>
         public void ChangeContainer(string container)
         {
-            if (this.connectedUsingPassword)
+            if (this._ConnectedUsingPassword)
             {
-                principalContext = new PrincipalContext(this.contextType, this.server, container, this.contextOptions, this.userName, ToInsecureString(this.password));
+                _PrincipalContext = new PrincipalContext(this._ContextType, this._Server, container, this._ContextOptions, this._UserName, ToInsecureString(this._Password));
             }
             else
             {
-                principalContext = new PrincipalContext(this.contextType, this.server, container, this.contextOptions);
+                _PrincipalContext = new PrincipalContext(this._ContextType, this._Server, container, this._ContextOptions);
             }
         }
 
@@ -408,7 +434,7 @@ namespace ESH.Utility.ActiveDirectory
         /// <returns>A new DirectoryEntry object with connection information and container set</returns>
         public DirectoryEntry GetNewDirectoryEntry()
         {
-            return GetNewDirectoryEntry(container);
+            return GetNewDirectoryEntry(_Container);
         }
 
         /// <summary>
@@ -426,29 +452,29 @@ namespace ESH.Utility.ActiveDirectory
                 throw new ActiveDirectoryOperationException("There is no current connection to an Active Directory server.");
             }
 
-            if (defaultPrincipal == null)
+            if (_DefaultPrincipal == null)
             {
                 throw new ActiveDirectoryOperationException("The default principal object does not exist.");
             }
-            var sourceEntry = (DirectoryEntry)defaultPrincipal.GetUnderlyingObject();
+            var sourceEntry = (DirectoryEntry)_DefaultPrincipal.GetUnderlyingObject();
 
             DirectoryEntry destinationEntry = new DirectoryEntry();
-            if (connectedUsingPassword)
+            if (_ConnectedUsingPassword)
             {
                 destinationEntry.AuthenticationType = sourceEntry.AuthenticationType;
-                destinationEntry.Username = this.userName;
-                destinationEntry.Password = ToInsecureString(this.password);
+                destinationEntry.Username = this._UserName;
+                destinationEntry.Password = ToInsecureString(this._Password);
             }
             else
             {
                 destinationEntry.AuthenticationType = sourceEntry.AuthenticationType;
             }
             string pathPrefix = String.Empty;
-            if (this.contextType == ContextType.Domain || this.contextType == ContextType.ApplicationDirectory)
+            if (this._ContextType == ContextType.Domain || this._ContextType == ContextType.ApplicationDirectory)
             {
                 pathPrefix = "LDAP://";
             }
-            else if (this.contextType == ContextType.Machine)
+            else if (this._ContextType == ContextType.Machine)
             {
                 pathPrefix = "WinNT://";
             }
@@ -458,7 +484,7 @@ namespace ESH.Utility.ActiveDirectory
                 separator = "";
             }
 
-            destinationEntry.Path = pathPrefix + this.server + separator + container;
+            destinationEntry.Path = pathPrefix + this._Server + separator + container;
 
             return destinationEntry;
         }
@@ -542,7 +568,7 @@ namespace ESH.Utility.ActiveDirectory
         /// <returns>true if the credentials are valid; otherwise false.</returns>
         public bool ValidateCredentials(string userName, string password)
         {
-            return principalContext.ValidateCredentials(userName, password);
+            return _PrincipalContext.ValidateCredentials(userName, password);
         }
 
         /// <summary>
@@ -578,7 +604,7 @@ namespace ESH.Utility.ActiveDirectory
 
             try
             {
-                principal = ADUserPrincipal.FindByIdentity(principalContext, IdentityType.SamAccountName, userName);
+                principal = ADUserPrincipal.FindByIdentity(_PrincipalContext, IdentityType.SamAccountName, userName);
             }
             catch
             {
@@ -597,7 +623,7 @@ namespace ESH.Utility.ActiveDirectory
 
             try
             {
-                result = principalContext.ValidateCredentials(userName, password);
+                result = _PrincipalContext.ValidateCredentials(userName, password);
             }
             catch
             {
@@ -640,6 +666,24 @@ namespace ESH.Utility.ActiveDirectory
             }
         }
 
+        /// <summary>
+        /// Converts a String to a SecureString
+        /// </summary>
+        /// <param name="input">String to convert</param>
+        /// <returns>SecureString containing the value of the input String</returns>
+        public static SecureString ToSecureString(string input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            else
+            {
+                var output = new SecureString();
+                input.ToList().ForEach(output.AppendChar);
+                return output;
+            }
+        }
     }
 
 }

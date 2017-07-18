@@ -56,16 +56,16 @@ namespace ESH.Utility.ActiveDirectory
         public ADComputerPrincipal(PrincipalContext context, string samAccountName, string password, bool enabled)
             : base(context, samAccountName, password, enabled) { }
 
-        private ADComputerPrincipalSearchFilter advancedSearchFilter;
+        private ADComputerPrincipalSearchFilter _AdvancedSearchFilter;
         new public ADComputerPrincipalSearchFilter AdvancedSearchFilter
         {
             get
             {
-                if (advancedSearchFilter == null)
+                if (_AdvancedSearchFilter == null)
                 {
-                    advancedSearchFilter = new ADComputerPrincipalSearchFilter(this);
+                    _AdvancedSearchFilter = new ADComputerPrincipalSearchFilter(this);
                 }
-                return advancedSearchFilter;
+                return _AdvancedSearchFilter;
             }
         }
 

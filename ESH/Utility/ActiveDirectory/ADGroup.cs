@@ -55,16 +55,16 @@ namespace ESH.Utility.ActiveDirectory
         public ADGroupPrincipal(PrincipalContext context, string samAccountName)
             : base(context, samAccountName) { }
 
-        private ADGroupPrincipalSearchFilter advancedSearchFilter;
+        private ADGroupPrincipalSearchFilter _AdvancedSearchFilter;
         public ADGroupPrincipalSearchFilter AdvancedSearchFilter
         {
             get
             {
-                if (advancedSearchFilter == null)
+                if (_AdvancedSearchFilter == null)
                 {
-                    advancedSearchFilter = new ADGroupPrincipalSearchFilter(this);
+                    _AdvancedSearchFilter = new ADGroupPrincipalSearchFilter(this);
                 }
-                return advancedSearchFilter;
+                return _AdvancedSearchFilter;
             }
         }
 

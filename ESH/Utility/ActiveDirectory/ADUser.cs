@@ -58,16 +58,16 @@ namespace ESH.Utility.ActiveDirectory
         public ADUserPrincipal(PrincipalContext context, string samAccountName, string password, bool enabled)
             : base(context, samAccountName, password, enabled) { }
 
-        private ADUserPrincipalSearchFilter advancedSearchFilter;
+        private ADUserPrincipalSearchFilter _AdvancedSearchFilter;
         new public ADUserPrincipalSearchFilter AdvancedSearchFilter
         {
             get
             {
-                if (advancedSearchFilter == null)
+                if (_AdvancedSearchFilter == null)
                 {
-                    advancedSearchFilter = new ADUserPrincipalSearchFilter(this);
+                    _AdvancedSearchFilter = new ADUserPrincipalSearchFilter(this);
                 }
-                return advancedSearchFilter;
+                return _AdvancedSearchFilter;
             }
         }
 
