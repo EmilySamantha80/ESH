@@ -111,49 +111,97 @@ namespace ESH.Utility
         /// <summary>
         /// Adds a specified integer to a BaseX number
         /// </summary>
-        /// <param name="number">BaseX number to convert</param>
-        /// <param name="i">Integer to add</param>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">Integer to add</param>
         /// <param name="baseAlphabet">BaseX alphabet to use</param>
         /// <returns>Base36 result</returns>
-        public static string Add(string number, Int64 i, string baseAlphabet)
+        public static string Add(string a, Int64 b, string baseAlphabet)
         {
-            return FromInt64(ToInt64(number, baseAlphabet) + i, baseAlphabet);
+            return FromInt64(ToInt64(a, baseAlphabet) + b, baseAlphabet);
+        }
+
+        /// <summary>
+        /// Adds a specified BaseX number to a BaseX number
+        /// </summary>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">BaseX number to add</param>
+        /// <param name="baseAlphabet">BaseX alphabet to use</param>
+        /// <returns>Base36 result</returns>
+        public static string Add(string a, string b, string baseAlphabet)
+        {
+            return FromInt64(ToInt64(a, baseAlphabet) + ToInt64(b, baseAlphabet), baseAlphabet);
         }
 
         /// <summary>
         /// Subtracts a specified integer from a BaseX number
         /// </summary>
-        /// <param name="number">BaseX number to convert</param>
-        /// <param name="i">Integer to subtract</param>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">Integer to subtract</param>
         /// <param name="baseAlphabet">BaseX alphabet to use</param>
         /// <returns>Base36 result</returns>
-        public static string Subtract(string number, Int64 i, string baseAlphabet)
+        public static string Subtract(string a, Int64 b, string baseAlphabet)
         {
-            return FromInt64(ToInt64(number, baseAlphabet) - i, baseAlphabet);
+            return FromInt64(ToInt64(a, baseAlphabet) - b, baseAlphabet);
+        }
+
+        /// <summary>
+        /// Subtracts a specified BaseX number from a BaseX number
+        /// </summary>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">BaseX number to subtract</param>
+        /// <param name="baseAlphabet">BaseX alphabet to use</param>
+        /// <returns>Base36 result</returns>
+        public static string Subtract(string a, string b, string baseAlphabet)
+        {
+            return FromInt64(ToInt64(a, baseAlphabet) - ToInt64(b, baseAlphabet), baseAlphabet);
         }
 
         /// <summary>
         /// Multiplies a specified integer and a BaseX number
         /// </summary>
-        /// <param name="number">BaseX number to convert</param>
-        /// <param name="i">Integer to subtract</param>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">Integer to subtract</param>
         /// <param name="baseAlphabet">BaseX alphabet to use</param>
         /// <returns>Base36 result</returns>
-        public static string Multiply(string number, Int64 i, string baseAlphabet)
+        public static string Multiply(string a, Int64 b, string baseAlphabet)
         {
-            return FromInt64(ToInt64(number, baseAlphabet) * i, baseAlphabet);
+            return FromInt64(ToInt64(a, baseAlphabet) * b, baseAlphabet);
+        }
+
+        /// <summary>
+        /// Multiplies a specified BaseX number and a BaseX number
+        /// </summary>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">BaseX number to subtract</param>
+        /// <param name="baseAlphabet">BaseX alphabet to use</param>
+        /// <returns>Base36 result</returns>
+        public static string Multiply(string a, string b, string baseAlphabet)
+        {
+            return FromInt64(ToInt64(a, baseAlphabet) * ToInt64(b, baseAlphabet), baseAlphabet);
         }
 
         /// <summary>
         /// Divides a BaseX number by a specified integer (without remainder)
         /// </summary>
-        /// <param name="number">BaseX number to convert</param>
-        /// <param name="i">Integer to subtract</param>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">Integer to subtract</param>
         /// <param name="baseAlphabet">BaseX alphabet to use</param>
         /// <returns>Base36 result</returns>
-        public static string Divide(string number, Int64 i, string baseAlphabet)
+        public static string Divide(string a, Int64 b, string baseAlphabet)
         {
-            return FromInt64(ToInt64(number, baseAlphabet) / i, baseAlphabet);
+            return FromInt64(ToInt64(a, baseAlphabet) / b, baseAlphabet);
+        }
+
+        /// <summary>
+        /// Divides a BaseX number by a specified BaseX number (without remainder)
+        /// </summary>
+        /// <param name="a">BaseX number to convert</param>
+        /// <param name="b">BaseX number to subtract</param>
+        /// <param name="baseAlphabet">BaseX alphabet to use</param>
+        /// <returns>Base36 result</returns>
+        public static string Divide(string a, string b, string baseAlphabet)
+        {
+            return FromInt64(ToInt64(a, baseAlphabet) / ToInt64(b, baseAlphabet), baseAlphabet);
         }
     }
 }
