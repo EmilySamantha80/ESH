@@ -33,6 +33,7 @@ namespace ESH.Utility
         public const string Base2Alphabet = "01";
         public const string Base10Alphabet = "0123456789";
         public const string Base16Alphabet = "0123456789ABCDEF";
+        public const string Base26Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public const string Base36Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public const string Base62Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -51,6 +52,11 @@ namespace ESH.Utility
             {
                 isNegative = true;
                 input = input * -1;
+            }
+
+            if (input == 0)
+            {
+                return baseAlphabet[0].ToString();
             }
 
             while (input != 0)
