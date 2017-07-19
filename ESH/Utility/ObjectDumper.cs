@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ESH
+namespace ESH.Utility
 {
     /// <summary>
     /// Dumps information/values about a variable to a string
