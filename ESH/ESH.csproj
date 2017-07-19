@@ -62,6 +62,7 @@
     <Compile Include="Utility\Email.cs" />
     <Compile Include="Utility\ExceptionFormatter.cs" />
     <Compile Include="Utility\ExtensionMethods\DateTimeExtensions.cs" />
+    <Compile Include="Utility\ExtensionMethods\EnumExtensions.cs" />
     <Compile Include="Utility\ExtensionMethods\SecureStringExtensions.cs" />
     <Compile Include="Utility\ExtensionMethods\StringExtensions.cs" />
     <Compile Include="Utility\FileHash.cs" />
