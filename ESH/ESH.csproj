@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utility\ServiceInstaller.cs" />
     <Compile Include="Utility\ObjectDumper.cs" />
     <Compile Include="Utility\CommandLineArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
