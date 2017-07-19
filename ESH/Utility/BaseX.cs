@@ -1,4 +1,4 @@
-﻿// Title:  BaseX math (Math for numbers with any character set)
+﻿// Title:  BaseX conversion/math (Conversion/math for numbers with any character set)
 // Author: Emily Heiner
 //
 // MIT License
