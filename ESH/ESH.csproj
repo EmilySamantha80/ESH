@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\ActiveDirectory.cs" />
     <Compile Include="Utility\HtmlTools.cs" />
     <Compile Include="Utility\HttpPostWrapper.cs" />
     <Compile Include="Utility\IPAddressTools.cs" />
@@ -85,9 +86,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Examples\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NodaTime.2.0.0-alpha20160729\build\NodaTime.targets" Condition="Exists('..\packages\NodaTime.2.0.0-alpha20160729\build\NodaTime.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
