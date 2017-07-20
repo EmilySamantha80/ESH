@@ -54,8 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Examples\ActiveDirectory.cs" />
-    <Compile Include="Examples\RegistryTools.cs" />
+    <Compile Include="Examples\ActiveDirectoryExample.cs" />
+    <Compile Include="Examples\RegistryToolsExample.cs" />
     <Compile Include="Utility\HtmlTools.cs" />
     <Compile Include="Utility\HttpPostWrapper.cs" />
     <Compile Include="Utility\IPAddressTools.cs" />
