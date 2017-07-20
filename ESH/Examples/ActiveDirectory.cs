@@ -29,7 +29,13 @@ namespace ESH.Examples
 
             var context = Connect(ldapServer, ldapContainer, ldapUser, ldapPassword);
 
-            Console.WriteLine("CreateUser: " + CreateUser(user, firstName, lastName, context));
+            Console.Write("CreateUser: ");
+            CreateUser(user, firstName, lastName, context);
+            Console.WriteLine("OK");
+
+            Console.Write("AddUserToGroup: ");
+            AddUserToGroup(user, group, context);
+            Console.WriteLine("OK");
 
             Console.WriteLine("AuthenticateUser: " + AuthenticateUser(user, password, context).ToString());
 
@@ -135,6 +141,28 @@ namespace ESH.Examples
             userPrincipal.Save();
 
             return userPrincipal;
+        }
+
+        /// <summary>
+        /// Adds a user to a group
+        /// </summary>
+        /// <param name="user">SamAccountName of the user</param>
+        /// <param name="group">SamAccountName of the group</param>
+        /// <param name="context">Active context connection</param>
+        /// <returns>ADGroupPrincipal that the user was added to</returns>
+        public static ADGroupPrincipal AddUserToGroup(string user, string group, ADContext context)
+        {
+            ADUserPrincipal userPrincipal = ADUserPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", user, MatchType.Equals);
+            ADGroupPrincipal groupPrincipal = ADGroupPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", group, MatchType.Equals);
+            if (groupPrincipal == null)
+                throw new Exception("Failed to find group: " + group);
+
+            if (userPrincipal == null)
+                throw new Exception("Failed to find user: " + user);
+
+            groupPrincipal.Members.Add(userPrincipal);
+
+            return groupPrincipal;
         }
 
         /// <summary>
