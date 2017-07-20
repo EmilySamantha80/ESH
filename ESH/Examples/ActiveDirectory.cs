@@ -30,16 +30,16 @@ namespace ESH.Examples
             var context = Connect(ldapServer, ldapContainer, ldapUser, ldapPassword);
 
             Console.Write("CreateUser: ");
-            CreateUser(user, firstName, lastName, context);
+            CreateUser(context, user, firstName, lastName);
             Console.WriteLine("OK");
 
             Console.Write("AddUserToGroup: ");
-            AddUserToGroup(user, group, context);
+            AddUserToGroup(context, user, group);
             Console.WriteLine("OK");
 
-            Console.WriteLine("AuthenticateUser: " + AuthenticateUser(user, password, context).ToString());
+            Console.WriteLine("AuthenticateUser: " + AuthenticateUser(context, user, password).ToString());
 
-            Console.WriteLine("IsUserInGroup: " + IsUserInGroup(user, group, context).ToString());
+            Console.WriteLine("IsUserInGroup: " + IsUserInGroup(context, user, group).ToString());
 
             Console.WriteLine("GetAllGroups:");
             foreach (var principal in GetAllGroups(context))
@@ -48,13 +48,13 @@ namespace ESH.Examples
             }
 
             Console.WriteLine("GetGroupMembers:");
-            foreach (var principal in GetGroupMembers(group, context))
+            foreach (var principal in GetGroupMembers(context, group))
             {
                 Console.WriteLine(principal.DistinguishedName);
             }
 
             Console.WriteLine("GetUserGroupMembership:");
-            foreach (var principal in GetUserGroupMembership(user, context))
+            foreach (var principal in GetUserGroupMembership(context, user))
             {
                 Console.WriteLine(principal.DistinguishedName);
             }
@@ -66,7 +66,7 @@ namespace ESH.Examples
             }
 
             Console.Write("SetPassword: ");
-            SetPassword(user, password, context);
+            SetPassword(context, user, password);
             Console.WriteLine("OK");
         }
 
@@ -103,11 +103,11 @@ namespace ESH.Examples
         /// <summary>
         /// Authenticate a user
         /// </summary>
+        /// <param name="context">Active context connection</param>
         /// <param name="user">Username to authenticate</param>
         /// <param name="password">User's password</param>
-        /// <param name="context">Active context connection</param>
         /// <returns>Whether or not the user is authenticated successfully</returns>
-        public static bool AuthenticateUser(string user, string password, ADContext context)
+        public static bool AuthenticateUser(ADContext context, string user, string password)
         {
             bool login_result = false;
             ADUserPrincipal userPrincipal = null;
@@ -120,12 +120,12 @@ namespace ESH.Examples
         /// <summary>
         /// Creates a new user
         /// </summary>
+        /// <param name="context">Active context connection</param>
         /// <param name="samAccountName">SamAccountName (username) for the new user</param>
         /// <param name="firstName">New user's first name</param>
         /// <param name="lastName">New user's last name</param>
-        /// <param name="context">Active context connection</param>
         /// <returns>The created ADUserPrincipal</returns>
-        public static UserPrincipal CreateUser(string samAccountName, string firstName, string lastName, ADContext context)
+        public static UserPrincipal CreateUser(ADContext context, string samAccountName, string firstName, string lastName)
         {
             ADUserPrincipal userPrincipal = ADUserPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", samAccountName, MatchType.Equals);
             if (userPrincipal != null)
@@ -146,11 +146,11 @@ namespace ESH.Examples
         /// <summary>
         /// Adds a user to a group
         /// </summary>
+        /// <param name="context">Active context connection</param>
         /// <param name="user">SamAccountName of the user</param>
         /// <param name="group">SamAccountName of the group</param>
-        /// <param name="context">Active context connection</param>
         /// <returns>ADGroupPrincipal that the user was added to</returns>
-        public static ADGroupPrincipal AddUserToGroup(string user, string group, ADContext context)
+        public static ADGroupPrincipal AddUserToGroup(ADContext context, string user, string group)
         {
             ADUserPrincipal userPrincipal = ADUserPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", user, MatchType.Equals);
             ADGroupPrincipal groupPrincipal = ADGroupPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", group, MatchType.Equals);
@@ -169,11 +169,11 @@ namespace ESH.Examples
         /// <summary>
         /// Check if a user is in a group
         /// </summary>
+        /// <param name="context">Active context connection</param>
         /// <param name="user">Username to check</param>
         /// <param name="group">Group to check</param>
-        /// <param name="context">Active context connection</param>
         /// <returns>Whether or not the user is part of the group</returns>
-        public static bool IsUserInGroup(string user, string group, ADContext context)
+        public static bool IsUserInGroup(ADContext context, string user, string group)
         {
             ADGroupPrincipal groupPrincipal = ADGroupPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", group, MatchType.Equals);
             ADUserPrincipal userPrincipal = ADUserPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", user, MatchType.Equals);
@@ -205,10 +205,10 @@ namespace ESH.Examples
         /// <summary>
         /// Get all members of a group
         /// </summary>
-        /// <param name="group">Group to check</param>
         /// <param name="context">Active context connection</param>
+        /// <param name="group">Group to check</param>
         /// <returns>List of group members</returns>
-        public static PrincipalCollection GetGroupMembers(string group, ADContext context)
+        public static PrincipalCollection GetGroupMembers(ADContext context, string group)
         {
             ADGroupPrincipal principal = ADGroupPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", group, MatchType.Equals);
 
@@ -223,10 +223,10 @@ namespace ESH.Examples
         /// <summary>
         /// Get a user's group membership
         /// </summary>
-        /// <param name="user">User to check</param>
         /// <param name="context">Active context connection</param>
+        /// <param name="user">User to check</param>
         /// <returns>List of groups</returns>
-        public static PrincipalSearchResult<Principal> GetUserGroupMembership(string user, ADContext context)
+        public static PrincipalSearchResult<Principal> GetUserGroupMembership(ADContext context, string user)
         {
             ADUserPrincipal userPrincipal = ADUserPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", user, MatchType.Equals);
             if (userPrincipal == null)
@@ -278,10 +278,10 @@ namespace ESH.Examples
         /// <summary>
         /// Set a user's password
         /// </summary>
+        /// <param name="context">Active context connection</param>
         /// <param name="user">User to set password on</param>
         /// <param name="password">New password</param>
-        /// <param name="context">Active context connection</param>
-        public static void SetPassword(string user, string password, ADContext context)
+        public static void SetPassword(ADContext context, string user, string password)
         {
             ADUserPrincipal userPrincipal = ADUserPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", user, MatchType.Equals);
             if (userPrincipal == null)
