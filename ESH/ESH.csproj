@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utility\IPAddressTools.cs" />
     <Compile Include="Utility\NtfsInheritance.cs" />
     <Compile Include="Utility\ServiceInstaller.cs" />
     <Compile Include="Utility\ObjectDumper.cs" />
