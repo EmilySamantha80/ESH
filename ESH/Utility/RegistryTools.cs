@@ -36,23 +36,6 @@ namespace ESH.Utility
     /// </summary>
     public class RegistryTools
     {
-        /*
-        Usage examples:
-        RegistryKey rootKey = Registry.CurrentUser;
-        string keyPath = @"Software\MyProgram";
-        string valueName = @"MyKey";
-        string valueData = @"Test";
-
-        RegistryTools.KeyExists(rootKey, keyPath);
-        RegistryTools.ValueExists(rootKey, keyPath, valueName);
-        RegistryTools.CreateSubKey(rootKey, keyPath);
-        RegistryTools.ReadRegistryValue(rootKey, keyPath, valueName);
-        RegistryTools.WriteRegistryValue(rootKey, keyPath, valueName, valueData, RegistryValueKind.String);
-        RegistryTools.DeleteValue(rootKey, keyPath, valueName);
-        RegistryTools.DeleteSubKey(rootKey, keyPath);
-        RegistryTools.DeleteSubKeyTree(rootKey, keyPath);	
-        */
-
         /// <summary>
         /// Holds information about a registry value
         /// </summary>
