@@ -9,7 +9,7 @@ using System.DirectoryServices;
 
 namespace ESH.Examples
 {
-    public class ActiveDirectory
+    public class ActiveDirectoryExamples
     {
         /// <summary>
         /// Test the functions
