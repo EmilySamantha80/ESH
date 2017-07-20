@@ -22,10 +22,14 @@ namespace ESH.Examples
             string ldapPassword = null;
 
             string user = "fooUser";
+            string firstName = "Foo";
+            string lastName = "User";
             string password = "fooPassword";
             string group = "fooGroup";
 
             var context = Connect(ldapServer, ldapContainer, ldapUser, ldapPassword);
+
+            Console.WriteLine("CreateUser: " + CreateUser(user, firstName, lastName, context));
 
             Console.WriteLine("AuthenticateUser: " + AuthenticateUser(user, password, context).ToString());
 
@@ -105,6 +109,32 @@ namespace ESH.Examples
             login_result = context.ValidateCredentials(user, password, out userPrincipal, out resultString);
 
             return login_result;
+        }
+
+        /// <summary>
+        /// Creates a new user
+        /// </summary>
+        /// <param name="samAccountName">SamAccountName (username) for the new user</param>
+        /// <param name="firstName">New user's first name</param>
+        /// <param name="lastName">New user's last name</param>
+        /// <param name="context">Active context connection</param>
+        /// <returns>The created ADUserPrincipal</returns>
+        public static UserPrincipal CreateUser(string samAccountName, string firstName, string lastName, ADContext context)
+        {
+            ADUserPrincipal userPrincipal = ADUserPrincipal.FindOneByAttribute(context.PrincipalContext, "sAMAccountName", samAccountName, MatchType.Equals);
+            if (userPrincipal != null)
+                throw new Exception("User already exists: " + samAccountName);
+
+            userPrincipal = new ADUserPrincipal(context.PrincipalContext);
+            userPrincipal.SamAccountName = samAccountName;
+            userPrincipal.GivenName = firstName;
+            userPrincipal.Surname = lastName;
+            userPrincipal.Name = firstName + " " + lastName;
+            //Example of how to set attributes that aren't available as properties
+            userPrincipal.SetAttribute("employeeId", "123456789");
+            userPrincipal.Save();
+
+            return userPrincipal;
         }
 
         /// <summary>
