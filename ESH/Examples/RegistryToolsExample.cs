@@ -24,7 +24,8 @@ namespace ESH.Examples
             RegistryTools.WriteRegistryValue(rootKey, keyPath, valueName, valueData, RegistryValueKind.String);
             RegistryTools.DeleteValue(rootKey, keyPath, valueName);
             RegistryTools.DeleteSubKey(rootKey, keyPath);
-            RegistryTools.DeleteSubKeyTree(rootKey, keyPath);
+            // Only one of the sub-key deletions can be called (can't delete something that's deleted), so this is commented out. Uncomment it and comment the above line to test DeleteSubKeyTree()
+            //RegistryTools.DeleteSubKeyTree(rootKey, keyPath);
         }
     }
 }
