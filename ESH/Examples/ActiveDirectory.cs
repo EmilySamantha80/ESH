@@ -49,9 +49,8 @@ namespace ESH.Examples
                 Console.WriteLine(principal.DistinguishedName);
             }
 
-            Console.WriteLine("GetAllContainers:");
-            var entries = new List<DirectoryEntry>();
-            foreach (var container in GetAllContainers(context, entries, null, true))
+            Console.WriteLine("GetAllContainers (Recursive):");
+            foreach (var container in GetAllContainers(context, true))
             {
                 Console.WriteLine(container.Path.Substring(container.Path.LastIndexOf('/') + 1));
             }
@@ -181,12 +180,17 @@ namespace ESH.Examples
         /// Gets all containers and OUs under the context's base OU
         /// </summary>
         /// <param name="context">Active context connection</param>
-        /// <param name="entries">Existing entries. Initially this should be an empty list</param>
-        /// <param name="currentEntry">Current entry that is being evaluated. Initially this should be null</param>
         /// <param name="recurseContainers">Whether or not to recurse containers</param>
+        /// <param name="entries">Existing entries. Initially this should be null</param>
+        /// <param name="currentEntry">Current entry that is being evaluated. Initially this should be null</param>
         /// <returns>List of containers</returns>
-        public static List<DirectoryEntry> GetAllContainers(ADContext context, List<DirectoryEntry> entries, DirectoryEntry currentEntry = null, bool recurseContainers = false)
+        public static List<DirectoryEntry> GetAllContainers(ADContext context, bool recurseContainers = false, List<DirectoryEntry> entries = null, DirectoryEntry currentEntry = null)
         {
+            if (entries == null)
+            {
+                entries = new List<DirectoryEntry>();
+            }
+
             var containers = new List<DirectoryEntry>();
             if (currentEntry == null)
             {
@@ -207,7 +211,7 @@ namespace ESH.Examples
             foreach (var container in containers)
             {
                 entries.Add(container);
-                entries.AddRange(GetAllContainers(context, entries, container));
+                entries.AddRange(GetAllContainers(context, true, entries, container));
             }
             return entries;
         }
