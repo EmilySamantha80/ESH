@@ -161,6 +161,7 @@ namespace ESH.Examples
                 throw new Exception("Failed to find user: " + user);
 
             groupPrincipal.Members.Add(userPrincipal);
+            groupPrincipal.Save();
 
             return groupPrincipal;
         }
