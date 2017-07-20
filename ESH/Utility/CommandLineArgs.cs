@@ -31,9 +31,18 @@ using System.Threading.Tasks;
 
 namespace ESH.Utility
 {
+    /// <summary>
+    /// Better command line argument parsing
+    /// </summary>
     public class CommandLineArgs
     {
         protected enum enumParseState : int { StartToken, InQuote, InToken };
+
+        /// <summary>
+        /// Parses the command line arguments into a more logical array of arguments
+        /// </summary>
+        /// <param name="exeNameAsArg">Whether or not to include the executable file name as an argument</param>
+        /// <returns>Array of arguments</returns>
         public static string[] Parse(bool exeNameAsArg = false)
         {
             String CommandLineArgs = Environment.CommandLine.ToString();
