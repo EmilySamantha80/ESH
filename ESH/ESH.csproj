@@ -79,7 +79,7 @@
     <Compile Include="Utility\ImageUtils.cs" />
     <Compile Include="Utility\Iso8601.cs" />
     <Compile Include="Utility\LogFile.cs" />
-    <Compile Include="Utility\ReflectionUtils.cs" />
+    <Compile Include="Utility\ReflectionTools.cs" />
     <Compile Include="Utility\RegistryTools.cs" />
     <Compile Include="Utility\Telnet.cs" />
   </ItemGroup>

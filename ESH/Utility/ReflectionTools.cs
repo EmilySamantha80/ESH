@@ -32,7 +32,7 @@ using System.Diagnostics;
 
 namespace ESH.Utility
 {
-    public class ReflectionUtils
+    public class ReflectionTools
     {
         public static IEnumerable<Type> GetTypesImplementingInterface(Type type)
         {

@@ -114,7 +114,7 @@ namespace ESH.Utility
             string callingClassName;
             try
             {
-                callingClassName = ReflectionUtils.GetCallingType().Name;
+                callingClassName = ReflectionTools.GetCallingType().Name;
             }
             catch
             {
@@ -124,7 +124,7 @@ namespace ESH.Utility
             string callingMethodName;
             try
             {
-                callingMethodName = ReflectionUtils.GetCallingMethod().Name;
+                callingMethodName = ReflectionTools.GetCallingMethod().Name;
             }
             catch
             {
@@ -139,7 +139,7 @@ namespace ESH.Utility
             {
                 try
                 {
-                    callingClassName = ReflectionUtils.GetCallingType().Name;
+                    callingClassName = ReflectionTools.GetCallingType().Name;
                 }
                 catch
                 {
@@ -151,7 +151,7 @@ namespace ESH.Utility
             {
                 try
                 {
-                    callingMethodName = ReflectionUtils.GetCallingMethod().Name;
+                    callingMethodName = ReflectionTools.GetCallingMethod().Name;
                 }
                 catch
                 {
@@ -172,7 +172,7 @@ namespace ESH.Utility
             {
                 try
                 {
-                    callingClassName = ReflectionUtils.GetCallingType().Name;
+                    callingClassName = ReflectionTools.GetCallingType().Name;
                 }
                 catch
                 {
@@ -184,7 +184,7 @@ namespace ESH.Utility
             {
                 try
                 {
-                    callingMethodName = ReflectionUtils.GetCallingMethod().Name;
+                    callingMethodName = ReflectionTools.GetCallingMethod().Name;
                 }
                 catch
                 {
