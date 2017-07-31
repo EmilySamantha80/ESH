@@ -57,6 +57,25 @@ namespace ESH.Utility
             }
         }
 
+        private bool _LogToFile;
+        public bool LogToFile
+        {
+            get { return _LogToFile; }
+            set
+            {
+                _LogToFile = value;
+                if (value == true)
+                {
+                    InitializeLogWriter();
+                }
+                else if (_Writer != null)
+                {
+                    _Writer.Close();
+                    _Writer = null;
+                }
+            }
+        }
+
         private string _LogTag;
         public string LogTag
         {
@@ -72,33 +91,37 @@ namespace ESH.Utility
 
         private object _LogLocker = new object();
 
-        public LogFile(Stream stream)
+        private void InitializeLogWriter()
         {
+            if (_Writer != null)
+            {
+                _Writer.Close();
+            }
+
+            if (!Directory.Exists(this.LogPath))
+                Directory.CreateDirectory(this.LogPath);
+
+            string logFileName = this.LogTag + "-" + DateTime.Now.ToSortableDate() + ".txt";
+            _Writer = new StreamWriter(Path.Combine(this.LogPath, logFileName), true);
+        }
+
+        public LogFile(Stream stream, bool logToFile = true)
+        {
+            this.LogToFile = logToFile;
             this._Writer = new StreamWriter(stream);
             this._Writer.AutoFlush = true;
         }
 
-        public LogFile(string path, string tag)
+        public LogFile(string path, string tag, bool logToFile = true)
         {
             this.LogPath = path;
             this.LogTag = tag;
-
-            string logFileName = this.LogTag + "-" + DateTime.Now.ToSortableDate() + ".txt";
-
-            if (!Directory.Exists(this.LogPath))
-                Directory.CreateDirectory(this.LogPath);
-
-            this._Writer = new StreamWriter(Path.Combine(this.LogPath, logFileName), true);
+            this.LogToFile = logToFile;
         }
 
-        public LogFile()
+        public LogFile(bool logToFile = true)
         {
-            string logFileName = this.LogTag + "-" + DateTime.Now.ToSortableDate() + ".txt";
-
-            if (!Directory.Exists(this.LogPath))
-                Directory.CreateDirectory(this.LogPath);
-
-            this._Writer = new StreamWriter(Path.Combine(this.LogPath, logFileName), true);
+            this.LogToFile = logToFile;
         }
 
         public static void ClearCurrentConsoleLine()
@@ -130,7 +153,7 @@ namespace ESH.Utility
             {
                 callingMethodName = "Unknown";
             }
-            WriteLine(message, true, true, callingClassName, callingMethodName);
+            WriteLine(message, this.LogToFile, true, callingClassName, callingMethodName);
         }
 
         public void WriteLine(string message, string callingClassName = null, string callingMethodName = null)
@@ -158,10 +181,10 @@ namespace ESH.Utility
                     callingMethodName = "Unknown";
                 }
             }
-            WriteLine(message, true, true, callingClassName, callingMethodName);
+            WriteLine(message, this.LogToFile, true, callingClassName, callingMethodName);
         }
 
-        public void WriteLine(string message, bool writeToLog = true, bool writeToConsole = true, string callingClassName = null, string callingMethodName = null)
+        public void WriteLine(string message, bool? writeToLog = null, bool writeToConsole = true, string callingClassName = null, string callingMethodName = null)
         {
             if (message == null)
             {
@@ -198,13 +221,22 @@ namespace ESH.Utility
                 //Console.WriteLine(DateTime.Now.ToIso8601String() + "/" + message);
             }
 
-            if (writeToLog)
+            if (!writeToLog.HasValue)
+            {
+                writeToLog = this.LogToFile;
+            }
+
+            if (writeToLog.Value)
             {
                 lock (this._LogLocker)
                 {
+                    if (this._Writer == null)
+                    {
+                        InitializeLogWriter();
+                    }
+
                     this._Writer.WriteLine(Iso8601.ToIso8601String(DateTime.Now) + "/" + callingClassName + "." + callingMethodName + "/" + message);
                     this._Writer.Flush();
-                    //this._Writer.WriteLine(DateTime.Now.ToIso8601String() + "/" + message);
                 }
             }
         }
