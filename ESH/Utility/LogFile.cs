@@ -243,13 +243,19 @@ namespace ESH.Utility
 
         public void Flush()
         {
-            this._Writer.Flush();
+            if (this._Writer != null)
+            {
+                this._Writer.Flush();
+            }
         }
 
         // Propagate Dispose to StreamWriter
         public void Dispose()
         {
-            this._Writer.Dispose();
+            if (this._Writer != null)
+            {
+                this._Writer.Dispose();
+            }
         }
     }
 }
