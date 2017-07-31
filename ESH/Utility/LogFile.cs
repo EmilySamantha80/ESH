@@ -33,9 +33,15 @@ using ESH.Utility.ExtensionMethods;
 
 namespace ESH.Utility
 {
+    /// <summary>
+    /// Logs text to a file as well as to the console
+    /// </summary>
     public class LogFile : IDisposable
     {
         private StreamWriter _Writer;
+        /// <summary>
+        /// The StreamWriter that is being used
+        /// </summary>
         public StreamWriter Writer
         {
             get
@@ -45,6 +51,9 @@ namespace ESH.Utility
         }
 
         private string _LogPath;
+        /// <summary>
+        /// The path to the log file. Defaults to a subfolder under the calling file's folder named "Logs"
+        /// </summary>
         public string LogPath
         {
             get
@@ -57,7 +66,20 @@ namespace ESH.Utility
             }
         }
 
+        private bool _LogToConsole;
+        /// <summary>
+        /// Whether or not to log to the console. Can be overriden by the writeToConsole parameter in WriteLine()
+        /// </summary>
+        public bool LogToConsole
+        {
+            get { return _LogToConsole; }
+            set { _LogToConsole = value; }
+        }
+
         private bool _LogToFile;
+        /// <summary>
+        /// Whether or not to log to file. Can be overriden by the writeToLog parameter in WriteLine()
+        /// </summary>
         public bool LogToFile
         {
             get { return _LogToFile; }
@@ -77,6 +99,9 @@ namespace ESH.Utility
         }
 
         private string _LogTag;
+        /// <summary>
+        /// Prefix for the log filename. Filename is PREFIX-YYYYMMDD.txt
+        /// </summary>
         public string LogTag
         {
             get
@@ -89,8 +114,14 @@ namespace ESH.Utility
             }
         }
 
+        /// <summary>
+        /// Object that is used to guarantee that only one call is writing to the file at a time
+        /// </summary>
         private object _LogLocker = new object();
 
+        /// <summary>
+        /// Initializes the log folder and the StreamWriter
+        /// </summary>
         private void InitializeLogWriter()
         {
             if (_Writer != null)
@@ -105,25 +136,49 @@ namespace ESH.Utility
             _Writer = new StreamWriter(Path.Combine(this.LogPath, logFileName), true);
         }
 
-        public LogFile(Stream stream, bool logToFile = true)
+        /// <summary>
+        /// Creates a LogFile object
+        /// </summary>
+        /// <param name="stream">Stream to write to</param>
+        /// <param name="logToFile">Whether or not to log to a file</param>
+        /// <param name="logToConsole">Whether or not to log to the console</param>
+        public LogFile(Stream stream, bool logToFile = true, bool logToConsole = true)
         {
             this.LogToFile = logToFile;
+            this.LogToConsole = logToConsole;
             this._Writer = new StreamWriter(stream);
             this._Writer.AutoFlush = true;
         }
 
-        public LogFile(string path, string tag, bool logToFile = true)
+        /// <summary>
+        /// Creates a LogFile object
+        /// </summary>
+        /// <param name="path">Path to the log file</param>
+        /// <param name="tag">Tag prefix for the log file</param>
+        /// <param name="logToFile">Whether or not to log to a file</param>
+        /// <param name="logToConsole">Whether or not to log to the console</param>
+        public LogFile(string path, string tag, bool logToFile = true, bool logToConsole = true)
         {
             this.LogPath = path;
+            this.LogToConsole = logToConsole;
             this.LogTag = tag;
             this.LogToFile = logToFile;
         }
 
-        public LogFile(bool logToFile = true)
+        /// <summary>
+        /// Creates a LogFile object
+        /// </summary>
+        /// <param name="logToFile">Whether or not to log to a file</param>
+        /// <param name="logToConsole">Whether or not to log to the console</param>
+        public LogFile(bool logToFile = true, bool logToConsole = true)
         {
             this.LogToFile = logToFile;
+            this.LogToConsole = logToConsole;
         }
 
+        /// <summary>
+        /// Utility function to clear the current console line
+        /// </summary>
         public static void ClearCurrentConsoleLine()
         {
             Console.Write("\r");
@@ -132,6 +187,10 @@ namespace ESH.Utility
             Console.Write("\r");
         }
 
+        /// <summary>
+        /// Writes a message to the log/console
+        /// </summary>
+        /// <param name="message">Message to write</param>
         public void WriteLine(string message = "")
         {
             string callingClassName;
@@ -153,9 +212,15 @@ namespace ESH.Utility
             {
                 callingMethodName = "Unknown";
             }
-            WriteLine(message, this.LogToFile, true, callingClassName, callingMethodName);
+            WriteLine(message, this.LogToFile, this.LogToConsole, callingClassName, callingMethodName);
         }
 
+        /// <summary>
+        /// Writes a message to the log/console
+        /// </summary>
+        /// <param name="message">Mesage to write</param>
+        /// <param name="callingClassName">Class that called the function</param>
+        /// <param name="callingMethodName">Method that called the function</param>
         public void WriteLine(string message, string callingClassName = null, string callingMethodName = null)
         {
             if (callingClassName == null)
@@ -181,10 +246,18 @@ namespace ESH.Utility
                     callingMethodName = "Unknown";
                 }
             }
-            WriteLine(message, this.LogToFile, true, callingClassName, callingMethodName);
+            WriteLine(message, this.LogToFile, this.LogToConsole, callingClassName, callingMethodName);
         }
 
-        public void WriteLine(string message, bool? writeToLog = null, bool writeToConsole = true, string callingClassName = null, string callingMethodName = null)
+        /// <summary>
+        /// Writes a message to the log/console
+        /// </summary>
+        /// <param name="message">Mesage to write</param>
+        /// <param name="logToFile">Whether or not to write to the log</param>
+        /// <param name="logToConsole">Whether or not to write to the console</param>
+        /// <param name="callingClassName">Class that called the function</param>
+        /// <param name="callingMethodName">Method that called the function</param>
+        public void WriteLine(string message, bool? logToFile = null, bool? logToConsole = null, string callingClassName = null, string callingMethodName = null)
         {
             if (message == null)
             {
@@ -215,18 +288,22 @@ namespace ESH.Utility
                 }
             }
 
-            if (writeToConsole)
+            if (!logToConsole.HasValue)
+            {
+                logToConsole = this.LogToConsole;
+            }
+
+            if (logToConsole.Value)
             {
                 Console.WriteLine(Iso8601.ToIso8601String(DateTime.Now) + "/" + callingClassName + "." + callingMethodName + "/" + message);
-                //Console.WriteLine(DateTime.Now.ToIso8601String() + "/" + message);
             }
 
-            if (!writeToLog.HasValue)
+            if (!logToFile.HasValue)
             {
-                writeToLog = this.LogToFile;
+                logToFile = this.LogToFile;
             }
 
-            if (writeToLog.Value)
+            if (logToFile.Value)
             {
                 lock (this._LogLocker)
                 {
@@ -241,6 +318,9 @@ namespace ESH.Utility
             }
         }
 
+        /// <summary>
+        /// Flushes the stream
+        /// </summary>
         public void Flush()
         {
             if (this._Writer != null)
@@ -249,6 +329,9 @@ namespace ESH.Utility
             }
         }
 
+        /// <summary>
+        /// Disposes of the stream
+        /// </summary>
         // Propagate Dispose to StreamWriter
         public void Dispose()
         {
