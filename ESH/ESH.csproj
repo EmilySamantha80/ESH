@@ -57,6 +57,7 @@
     <Compile Include="Examples\ActiveDirectoryExample.cs" />
     <Compile Include="Examples\LogFileExample.cs" />
     <Compile Include="Examples\RegistryToolsExample.cs" />
+    <Compile Include="Utility\ExtensionMethods\ListExtensions.cs" />
     <Compile Include="Utility\HtmlTools.cs" />
     <Compile Include="Utility\HttpPostWrapper.cs" />
     <Compile Include="Utility\IPAddressTools.cs" />
