@@ -100,5 +100,21 @@ namespace ESH.Utility.ExtensionMethods
             }
         }
 
+        /// <summary>
+        /// Reverses a string
+        /// </summary>
+        /// <param name="input">String to reverse</param>
+        /// <returns>Reversed string</returns>
+        public static string Reverse(this string input)
+        {
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                sb.Append(input[input.Length - i - 1]);
+            }
+
+            return sb.ToString();
+        }
     }
 }
