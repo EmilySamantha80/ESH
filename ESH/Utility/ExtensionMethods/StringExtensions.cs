@@ -110,7 +110,7 @@ namespace ESH.Utility.ExtensionMethods
             char[] c = new char[input.Length];
             int x = 0;
             int y = c.Length - 1;
-            while (x < y)
+            while (x <= y)
             {
                 c[x] = input[y];
                 c[y] = input[x];
