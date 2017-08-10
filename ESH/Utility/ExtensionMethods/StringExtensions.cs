@@ -107,14 +107,17 @@ namespace ESH.Utility.ExtensionMethods
         /// <returns>Reversed string</returns>
         public static string Reverse(this string input)
         {
-            var sb = new StringBuilder();
-
-            for (int i = 0; i < input.Length; i++)
+            char[] c = new char[input.Length];
+            int x = 0;
+            int y = c.Length - 1;
+            while (x < y)
             {
-                sb.Append(input[input.Length - i - 1]);
+                c[x] = input[y];
+                c[y] = input[x];
+                x++;
+                y--;
             }
-
-            return sb.ToString();
+            return new string(c);
         }
     }
 }
