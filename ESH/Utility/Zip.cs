@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ESH
+namespace ESH.Utility
 {
     public static class Zip
     {

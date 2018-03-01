@@ -86,7 +86,7 @@
     <Compile Include="Utility\ReflectionTools.cs" />
     <Compile Include="Utility\RegistryTools.cs" />
     <Compile Include="Utility\Telnet.cs" />
-    <Compile Include="Zip.cs" />
+    <Compile Include="Utility\Zip.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
