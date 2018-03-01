@@ -25,7 +25,6 @@
 
 using System;
 using System.Globalization;
-using NodaTime; // NodaTime is used for Time Zone conversion, and can be downloaded at http://nodatime.org or using NuGet.
 
 namespace ESH.Utility
 {
