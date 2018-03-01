@@ -30,7 +30,7 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Minimalist telnet implementation
 /// </summary>
-namespace ESH.Telnet
+namespace ESH.Utility.Telnet
 {
     /// <summary>
     /// Telnet protocol verbs

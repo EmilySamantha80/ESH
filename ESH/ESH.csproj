@@ -85,7 +85,7 @@
     <Compile Include="Utility\LogFile.cs" />
     <Compile Include="Utility\ReflectionTools.cs" />
     <Compile Include="Utility\RegistryTools.cs" />
-    <Compile Include="Utility\Telnet.cs" />
+    <Compile Include="Utility\Telnet\Telnet.cs" />
     <Compile Include="Utility\Zip.cs" />
   </ItemGroup>
   <ItemGroup>
