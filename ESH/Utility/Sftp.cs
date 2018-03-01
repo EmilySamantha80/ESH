@@ -1,4 +1,4 @@
-﻿// Title:  Sftp utilities 
+﻿// Title:  SFTP utilities 
 // Author: Emily Heiner
 //
 // MIT License
