@@ -46,39 +46,19 @@ namespace ESH.Utility.ExtensionMethods
         /// <summary>
         /// Get substring of specified number of characters on the left.
         /// </summary>
-        public static string Left(this string input, int length)
+        public static string Left(this string input, int maxLength)
         {
-            if (input.Length >= length)
-            {
-                char[] cString = input.ToCharArray();
-                Array.Resize(ref cString, length);
-                string val = new string(cString);
-                return val;
-            }
-            else
-            {
-                return input;
-            }
+            if (string.IsNullOrEmpty(input)) return input;
+            return input.Length <= maxLength ? input : input.Substring(0, maxLength);
         }
 
         /// <summary>
         /// Get substring of specified number of characters on the right.
         /// </summary>
-        public static string Right(this string input, int length)
+        public static string Right(this string input, int maxLength)
         {
-            if (input.Length >= length)
-            {
-                char[] cString = input.ToCharArray();
-                Array.Reverse(cString);
-                Array.Resize(ref cString, length);
-                Array.Reverse(cString);
-                string val = new string(cString);
-                return val;
-            }
-            else
-            {
-                return input;
-            }
+            if (string.IsNullOrEmpty(input)) return input;
+            return input.Length <= maxLength ? input : input.Substring(input.Length - maxLength, maxLength);
         }
 
         /// <summary>
