@@ -60,6 +60,7 @@
     <Compile Include="Examples\ActiveDirectoryExample.cs" />
     <Compile Include="Examples\LogFileExample.cs" />
     <Compile Include="Examples\RegistryToolsExample.cs" />
+    <Compile Include="Utility\ExtensionMethods\ByteExtensions.cs" />
     <Compile Include="Utility\ExtensionMethods\CharExtensions.cs" />
     <Compile Include="Utility\StryingCipher.cs" />
     <Compile Include="Utility\ExtensionMethods\ListExtensions.cs" />
