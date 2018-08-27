@@ -1,4 +1,4 @@
-﻿// Title: Utility Extension Methods
+﻿// Title: Hex manipulation
 // Author: Emily Heiner
 //
 // MIT License
@@ -28,18 +28,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ESH.Utility.ExtensionMethods
+namespace ESH.Utility
 {
-    public static class ByteExtensions
+    public class Hex
     {
         /// <summary>
         /// Converts a byte array to a hex string.
         /// </summary>
         /// <returns>A hex string.</returns>
         /// <param name="input">A byte array.</param>
-        public static string BytesToHexString(this byte[] input)
+        public static string BytesToHexString(byte[] input)
         {
             return BitConverter.ToString(input).Replace("-", String.Empty);
+        }
+
+        /// <summary>
+        /// Converts a hex string to a byte array.
+        /// </summary>
+        /// <returns>A byte array.</returns>
+        /// <param name="input">A hex string.</param>
+        public static byte[] HexStringToBytes(string input)
+        {
+            if (input.Length % 2 == 1)
+                throw new Exception("Hex string must have an even number of digits ");
+            byte[] arr = new byte[input.Length >> 1];
+            for (int i = 0; i < input.Length >> 1; ++i)
+                arr[i] = (byte)((HexValue(input[i << 1]) << 4) + (HexValue(input[(i << 1) + 1])));
+            return arr;
+        }
+
+        /// <summary>
+        /// Returns the hex value for a specified character
+        /// </summary>
+        public static int HexValue(char c)
+        {
+            if (c >= '0' && c <= '9')
+                return c - '0';
+            else if (c >= 'A' && c <= 'F')
+                return c - 'A' + 10;
+            else if (c >= 'a' && c <= 'f')
+                return c - 'a' + 10;
+
+            throw new ArgumentException("Invalid hex digit: " + c);
         }
     }
 }
