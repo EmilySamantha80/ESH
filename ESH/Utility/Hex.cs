@@ -33,6 +33,26 @@ namespace ESH.Utility
     public class Hex
     {
         /// <summary>
+        /// Converts a string to a hex string.
+        /// </summary>
+        /// <returns>A hex string.</returns>
+        /// <param name="input">A string.</param>
+        public static string StringToHexString(string input)
+        {
+            return BytesToHexString(Encoding.UTF8.GetBytes(input));
+        }
+
+        /// <summary>
+        /// Converts a hex string to a string.
+        /// </summary>
+        /// <returns>A string.</returns>
+        /// <param name="input">A hex string.</param>
+        public static string HexStringToString(string input)
+        {
+            return Encoding.UTF8.GetString(HexStringToBytes(input));
+        }
+
+        /// <summary>
         /// Converts a byte array to a hex string.
         /// </summary>
         /// <returns>A hex string.</returns>
