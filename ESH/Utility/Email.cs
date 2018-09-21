@@ -23,6 +23,12 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ESH.Utility
 {
@@ -77,5 +83,92 @@ namespace ESH.Utility
         {
             return input.ToString("yyyyMMddTHmmss");
         }
+
+        /// <summary>
+        /// Sends an email
+        /// </summary>
+        /// <param name="emailSubject">Subject of the email</param>
+        /// <param name="emailBody">Body of the email</param>
+        /// <param name="emailFrom">"from" address</param>
+        /// <param name="emailTo">List of "to" addresses</param>
+        /// <param name="emailCC">List of "cc" addresses</param>
+        /// <param name="emailBcc">List of "bcc" addresses</param>
+        /// <param name="smtpClient">SMTP client to use</param>
+        /// <param name="isBodyHtml">Whether or not the email body is HTML</param>
+        /// <param name="attachmentData">Attachment data (optional)</param>
+        /// <param name="attachmentName">Attachment name (optional)</param>
+        /// <param name="attachmentContentType">Attachment content type (optional)</param>
+        public static void SendEmail(string emailSubject, string emailBody, string emailFrom, List<string> emailTo, List<string> emailCC, List<string> emailBcc, SmtpClient smtpClient, bool isBodyHtml, string attachmentData = null, string attachmentName = null, string attachmentContentType = null)
+        {
+            string emailRegex = "^[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\\.[a-zA-Z]{2,4}$";
+            Regex regex = new Regex(emailRegex);
+
+            MailMessage mail = new MailMessage();
+            if (smtpClient == null)
+            {
+                throw new ArgumentException("Argument cannot be null", "smtpClient");
+            }
+
+            if (!String.IsNullOrEmpty(emailFrom) && regex.IsMatch(emailFrom))
+                mail.From = new MailAddress(emailFrom);
+            else
+                throw new FormatException(string.Format("The specified string in the 'From' e-mail address is invalid: '{0}'", (emailFrom == null ? "" : emailFrom)));
+
+            mail.Subject = (string.IsNullOrWhiteSpace(emailSubject) ? "" : emailSubject);
+            mail.Body = (string.IsNullOrWhiteSpace(emailBody) ? "" : emailBody);
+
+            if (emailTo == null)
+                emailTo = new List<string>();
+            foreach (var address in emailTo)
+            {
+                if (!String.IsNullOrEmpty(address) && regex.IsMatch(address))
+                    mail.To.Add(new MailAddress(address));
+                else
+                    throw new FormatException(string.Format("The specified string in the 'To' e-mail address is invalid: '{0}'", (address == null ? "" : address)));
+            }
+
+            if (emailCC == null)
+                emailCC = new List<string>();
+            foreach (var address in emailCC)
+            {
+                if (!String.IsNullOrEmpty(address) && regex.IsMatch(address))
+                    mail.CC.Add(new MailAddress(address));
+                else
+                    throw new FormatException(string.Format("The specified string in the 'CC' e-mail address is invalid: '{0}'", (address == null ? "" : address)));
+            }
+
+            if (emailBcc == null)
+                emailBcc = new List<string>();
+            foreach (var address in emailBcc)
+            {
+                if (!String.IsNullOrEmpty(address) && regex.IsMatch(address))
+                    mail.Bcc.Add(new MailAddress(address));
+                else
+                    throw new FormatException(string.Format("The specified string in the 'Bcc' e-mail address is invalid: '{0}'", (address == null ? "" : address)));
+            }
+
+            mail.IsBodyHtml = isBodyHtml;
+            if (mail.To.Count == 0 && mail.CC.Count == 0 && mail.Bcc.Count == 0)
+            {
+                throw new ArgumentException("At least one email address must be provided in the 'To', 'CC', or 'Bcc' parameters.");
+            }
+
+            if (attachmentData != null && attachmentName != null && attachmentContentType != null)
+            {
+                using (Stream stream = new MemoryStream(Encoding.ASCII.GetBytes(attachmentData)))
+                {
+                    //Add a new attachment to the E-mail message, using the correct MIME type
+                    var attachment = new Attachment(stream, new ContentType(attachmentContentType));
+                    attachment.Name = attachmentName;
+                    mail.Attachments.Add(attachment);
+                    smtpClient.Send(mail);
+                }
+            }
+            else
+            {
+                smtpClient.Send(mail);
+            }
+        }
+
     }
 }
