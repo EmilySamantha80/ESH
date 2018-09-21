@@ -34,10 +34,11 @@ namespace ESH.Utility
         /// <param name="startDate">Calendar item Start Date/Time</param>
         /// <param name="endDate">Calendar item End Date/Time</param>
         /// <param name="summary">Calendar item summary</param>
-        /// <param name="location">Calendar item Location</param>
-        /// <param name="notificationTime">Notification time examples: "30M" (30 Minutes), "1H" (1 Hour), "24H" (24 Hours)</param>
+        /// <param name="location">Calendar item location</param>
+        /// <param name="description">Calendar item description</param>
+        /// <param name="notificationTime">Notification time examples: "-PT30M" (30 minutes), "-PT1H" (1 hour), "-P1D" (1 day), "-P1DT12H" (1.5 days). See https://www.kanzaki.com/docs/ical/duration-t.html</param>
         /// <returns>String containing the ICS calendar item</returns>
-        public static string CreateICS(DateTime startDate, DateTime endDate, string summary, string location, string notificationTime)
+        public static string CreateICS(DateTime startDate, DateTime endDate, string summary, string location, string description, string notificationTime)
         {
             string ics = "";
             ics += "BEGIN:VCALENDAR" + Environment.NewLine;
@@ -50,11 +51,14 @@ namespace ESH.Utility
             ics += "DTEND;TZID=/US/Pacific:" + ConvertToICSDateTime(endDate) + Environment.NewLine;
             ics += "SUMMARY:" + summary + Environment.NewLine;
             ics += "LOCATION:" + location + Environment.NewLine;
+            ics += "DESCRIPTION:" + description.Replace(Environment.NewLine, @"\n") + Environment.NewLine;
             if (notificationTime != null)
             {
                 ics += "BEGIN:VALARM" + Environment.NewLine;
-                //Notification time examples: 30M (30 Minutes), 1H (1 Hour), 24H (24 Hours)
-                ics += "TRIGGER:-PT" + notificationTime + Environment.NewLine;
+                ics += "DESCRIPTION:REMINDER" + Environment.NewLine;
+                //Notification time examples: "-PT30M" (30 minutes), "-PT1H" (1 hour), "-P1D" (1 day), "-P1DT12H" (1.5 days)
+                //https://www.kanzaki.com/docs/ical/duration-t.html
+                ics += "TRIGGER:" + notificationTime + Environment.NewLine;
                 ics += "ACTION:DISPLAY" + Environment.NewLine;
                 ics += "END:VALARM" + Environment.NewLine;
             }
