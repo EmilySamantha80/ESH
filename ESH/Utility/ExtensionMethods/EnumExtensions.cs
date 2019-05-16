@@ -35,9 +35,9 @@ namespace ESH.Utility.ExtensionMethods
     public static class EnumExtensions
     {
         /// <summary>
-        /// Returns the value of the enum
+        /// Returns the value of the enum as a string
         /// </summary>
-        /// <returns>Value of the enum</returns>
+        /// <returns>String value of the enum</returns>
         public static string ValueString(this Enum value)
         {
             return System.Convert.ToInt32(value).ToString();
