@@ -61,6 +61,7 @@
     <Compile Include="Examples\ImpersonationExample.cs" />
     <Compile Include="Examples\LogFileExample.cs" />
     <Compile Include="Examples\RegistryToolsExample.cs" />
+    <Compile Include="FuzzyMatcher.cs" />
     <Compile Include="Utility\ExtensionMethods\CharExtensions.cs" />
     <Compile Include="Utility\Hex.cs" />
     <Compile Include="Utility\Http.cs" />
