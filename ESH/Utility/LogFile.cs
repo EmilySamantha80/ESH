@@ -1,6 +1,5 @@
 ﻿// Title: Simple file/screen logging
 // Author: Emily Heiner
-// Usage: using (LogFile logFile = new LogFile()) { ... }
 //
 // MIT License
 // Copyright(c) 2017 Emily Heiner (emilysamantha80@gmail.com)
@@ -36,6 +35,11 @@ namespace ESH.Utility
     /// <summary>
     /// Logs text to a file as well as to the console
     /// </summary>
+    /// <example>
+    /// <code>
+    /// using (LogFile logFile = new LogFile()) { ... }
+    /// </code>
+    /// </example>
     public class LogFile : IDisposable
     {
         private StreamWriter _Writer;
