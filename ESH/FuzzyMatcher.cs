@@ -58,10 +58,12 @@ namespace ESH
                 {
                     int outScore;
                     bool isMatch = FuzzyMatch(stringToSearchWord.Trim(), patternWord.Trim(), out outScore);
+                    // If there's a confirmed match, we want to boost the score
                     if (isMatch)
                     {
                         score += 1000;
                     }
+                    // Only add up scores that are positive
                     if (outScore > 0)
                     {
                         score += outScore;
