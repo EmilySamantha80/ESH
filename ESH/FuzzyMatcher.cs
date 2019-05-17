@@ -57,7 +57,7 @@ namespace ESH
                 foreach (var stringToSearchWord in stringToSearch.Split(new char[] { ' ', ';', ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     int outScore;
-                    bool isMatch = FuzzyMatcher.FuzzyMatch(stringToSearchWord.Trim(), patternWord.Trim(), out outScore);
+                    bool isMatch = FuzzyMatch(stringToSearchWord.Trim(), patternWord.Trim(), out outScore);
                     if (isMatch)
                     {
                         score += 1000;
