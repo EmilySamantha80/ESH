@@ -63,6 +63,7 @@
     <Compile Include="Examples\RegistryToolsExample.cs" />
     <Compile Include="Utility\ExtensionMethods\CharExtensions.cs" />
     <Compile Include="Utility\Hex.cs" />
+    <Compile Include="Utility\Http.cs" />
     <Compile Include="Utility\HttpTools.cs" />
     <Compile Include="Utility\Impersonation.cs" />
     <Compile Include="Utility\StryingCipher.cs" />
