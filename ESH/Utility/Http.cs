@@ -44,6 +44,38 @@ namespace ESH.Utility
         }
 
         /// <summary>
+        /// Perofrms an HTTP GET and returns the results
+        /// </summary>
+        /// <param name="uri">URI to post to</param>
+        /// <param name="userAgent">User agent string</param>
+        /// <returns>HttpResponse object containing the results of the web request</returns>
+        public static async Task<HttpResponse> DoHttpGetAsync(Uri uri, string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36")
+        {
+            var result = new HttpResponse();
+
+            using (var client = new HttpClient())
+            {
+                using (var request = new HttpRequestMessage(HttpMethod.Get, uri))
+                {
+                    request.Headers.ExpectContinue = false;
+                    request.Headers.Add("cache-control", "max-age=0");
+                    request.Headers.Add("user-agent", userAgent);
+                    using (HttpResponseMessage response = await client.SendAsync(request))
+                    {
+                        //Console.WriteLine("Response Code: " + ((int)response.StatusCode).ToString() + " " + response.StatusCode.ToString());
+
+                        result.Content = await response.Content.ReadAsStringAsync();
+                        result.StatusCode = response.StatusCode;
+                    }
+                }
+            }
+
+            return result;
+
+        }
+
+
+        /// <summary>
         /// Perofrms an HTTP Post and returns the results
         /// </summary>
         /// <param name="uri">URI to post to</param>
@@ -55,26 +87,28 @@ namespace ESH.Utility
             var result = new HttpResponse();
 
             var formContent = new FormUrlEncodedContent(postVars);
-            var client = new HttpClient();
-
-            using (var request = new HttpRequestMessage(HttpMethod.Post, uri))
+            using (var client = new HttpClient())
             {
-                request.Content = formContent;
-                request.Headers.ExpectContinue = false;
-                request.Headers.Add("cache-control", "max-age=0");
-                request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-                request.Headers.Add("user-agent", userAgent);
-                using (HttpResponseMessage response = await client.SendAsync(request))
+                using (var request = new HttpRequestMessage(HttpMethod.Post, uri))
                 {
-                    //Console.WriteLine("Response Code: " + ((int)response.StatusCode).ToString() + " " + response.StatusCode.ToString());
+                    request.Content = formContent;
+                    request.Headers.ExpectContinue = false;
+                    request.Headers.Add("cache-control", "max-age=0");
+                    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+                    request.Headers.Add("user-agent", userAgent);
+                    using (HttpResponseMessage response = await client.SendAsync(request))
+                    {
+                        //Console.WriteLine("Response Code: " + ((int)response.StatusCode).ToString() + " " + response.StatusCode.ToString());
 
-                    result.Content = await response.Content.ReadAsStringAsync();
-                    result.StatusCode = response.StatusCode;
+                        result.Content = await response.Content.ReadAsStringAsync();
+                        result.StatusCode = response.StatusCode;
+                    }
                 }
             }
 
             return result;
 
         }
+
     }
 }
