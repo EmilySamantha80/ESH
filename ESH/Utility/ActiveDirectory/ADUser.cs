@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
+using System.Reflection;
 
 /// <summary>
 /// Full featured C# Active Directory client
@@ -275,11 +276,40 @@ namespace ESH.Utility.ActiveDirectory
 
         /// <summary>
         /// Gets the Nullable System.DateTime that specifies the date and time of the last logon for this account.
-        /// NOTE: This value is guaranteed to be synched across domain controllers at least every 14 days, which means this value is only accurate to within 14 days.
         /// </summary>
         /// <returns>A Nullable System.DateTime that specifies the date and time of the last logon for this account</returns>
         [DirectoryProperty("lastLogon")]
         public new DateTime? LastLogon
+        {
+            get
+            {
+                // https://www.codeproject.com/Articles/565593/How-to-get-the-REAL-lastlogon-datetime-from-Active
+                if (ExtensionGet("lastLogon").Length == 0)
+                {
+                    return null;
+                }
+                var lastLogonDate = ExtensionGet("LastLogon")[0];
+                var lastLogonDateType = lastLogonDate.GetType();
+
+                var highPart = (Int32)lastLogonDateType.InvokeMember("HighPart",
+                    BindingFlags.GetProperty, null, lastLogonDate, null);
+                var lowPart = (Int32)lastLogonDateType.InvokeMember("LowPart",
+                    BindingFlags.GetProperty | BindingFlags.Public, null, lastLogonDate, null);
+
+                var longDate = ((Int64)highPart << 32 | (UInt32)lowPart);
+
+                return longDate > 0 ? (DateTime?)DateTime.FromFileTime(longDate) : null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Nullable System.DateTime that specifies the date and time of the last logon for this account.
+        /// NOTE: This value is guaranteed to be synched across domain controllers at least every 14 days, which means this value is only accurate to within 14 days.
+        /// To get the most accurate date/time use the LastLogon property
+        /// </summary>
+        /// <returns>A Nullable System.DateTime that specifies the date and time of the last logon for this account</returns>
+        [DirectoryProperty("lastLogonTimestamp")]
+        public DateTime? LastLogonTimestamp
         {
             get
             {
