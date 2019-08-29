@@ -62,6 +62,7 @@
     <Compile Include="Examples\LogFileExample.cs" />
     <Compile Include="Examples\RegistryToolsExample.cs" />
     <Compile Include="FuzzyMatcher.cs" />
+    <Compile Include="Utility\ActiveDirectory\IADsLargeInteger.cs" />
     <Compile Include="Utility\ExtensionMethods\CharExtensions.cs" />
     <Compile Include="Utility\GZip.cs" />
     <Compile Include="Utility\Hex.cs" />
