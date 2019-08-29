@@ -264,6 +264,7 @@ namespace ESH.Utility.ActiveDirectory
                     return null;
                 }
                 var lastLogonDate = ExtensionGet("LastLogon")[0];
+                //var lastLogonDateType = lastLogonDate.GetType();
                 var lastLogonDateType = typeof(IADsLargeInteger);
 
                 var highPart = (Int32)lastLogonDateType.InvokeMember("HighPart",
