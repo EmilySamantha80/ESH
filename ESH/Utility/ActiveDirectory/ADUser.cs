@@ -241,6 +241,25 @@ namespace ESH.Utility.ActiveDirectory
         }
 
         /// <summary>
+        /// Gets or sets the JPEG thumbnail photo for the account.
+        /// The image cannot be larger than 100 Kb.
+        /// </summary>
+        /// <returns>A byte array containing the photo</returns>
+        [DirectoryProperty("thumbnailPhoto")]
+        public byte[] ThumbnailPhoto
+        {
+            get
+            {
+                return (byte[])ExtensionGet("thumbnailPhoto")[0];
+            }
+
+            set
+            {
+                ExtensionSet("thumbnailPhoto", value);
+            }
+        }
+
+        /// <summary>
         /// Gets the Nullable System.DateTime that specifies the date and time that the account was locked out
         /// </summary>
         /// <returns>A System.DateTime that specifies the date and time that the account was locked out, or null if no lockout time is set on the account</returns>
