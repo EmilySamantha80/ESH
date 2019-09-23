@@ -179,6 +179,69 @@ namespace ESH.Utility.ActiveDirectory
         }
 
         /// <summary>
+        /// Gets or sets the department
+        /// </summary>
+        /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
+        [DirectoryProperty("department")]
+        public string Department
+        {
+            get
+            {
+                if (ExtensionGet("department").Length == 0)
+                {
+                    return null;
+                }
+                return Convert.ToString(ExtensionGet("department")[0]);
+            }
+            set
+            {
+                ExtensionSet("department", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the job title
+        /// </summary>
+        /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
+        [DirectoryProperty("title")]
+        public string JobTitle
+        {
+            get
+            {
+                if (ExtensionGet("title").Length == 0)
+                {
+                    return null;
+                }
+                return Convert.ToString(ExtensionGet("title")[0]);
+            }
+            set
+            {
+                ExtensionSet("title", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the office
+        /// </summary>
+        /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
+        [DirectoryProperty("physicalDeliveryOfficeName")]
+        public string Office
+        {
+            get
+            {
+                if (ExtensionGet("physicalDeliveryOfficeName").Length == 0)
+                {
+                    return null;
+                }
+                return Convert.ToString(ExtensionGet("physicalDeliveryOfficeName")[0]);
+            }
+            set
+            {
+                ExtensionSet("physicalDeliveryOfficeName", value);
+            }
+        }
+
+        /// <summary>
         /// Gets the date and time the object was created
         /// </summary>
         /// <returns>Returns a nullable DateTime containing the date and time the object was created</returns>
