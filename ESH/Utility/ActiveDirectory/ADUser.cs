@@ -242,6 +242,27 @@ namespace ESH.Utility.ActiveDirectory
         }
 
         /// <summary>
+        /// Gets or sets the notes
+        /// </summary>
+        /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
+        [DirectoryProperty("info")]
+        public string Notes
+        {
+            get
+            {
+                if (ExtensionGet("info").Length == 0)
+                {
+                    return null;
+                }
+                return Convert.ToString(ExtensionGet("info")[0]);
+            }
+            set
+            {
+                ExtensionSet("info", value);
+            }
+        }
+
+        /// <summary>
         /// Gets the date and time the object was created
         /// </summary>
         /// <returns>Returns a nullable DateTime containing the date and time the object was created</returns>
