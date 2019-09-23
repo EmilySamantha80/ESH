@@ -162,7 +162,7 @@ namespace ESH.Utility.ActiveDirectory
         /// </summary>
         /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
         [DirectoryProperty("ipPhone")]
-        public string IPPhone
+        public string IpPhone
         {
             get
             {
