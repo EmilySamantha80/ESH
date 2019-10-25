@@ -392,6 +392,7 @@ namespace ESH.Utility.ActiveDirectory
                     return null;
                 }
                 var lastLogonDate = ExtensionGet("LastLogon")[0];
+                // Use lastLogonDate.GetType() instead of typeof(IADsLargeInteger) in .NET Core, since the way IADsLargeInteger is declared is deprecated 
                 //var lastLogonDateType = lastLogonDate.GetType();
                 var lastLogonDateType = typeof(IADsLargeInteger);
 
