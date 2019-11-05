@@ -179,6 +179,48 @@ namespace ESH.Utility.ActiveDirectory
         }
 
         /// <summary>
+        /// Gets or sets the employee type
+        /// </summary>
+        /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
+        [DirectoryProperty("employeeType")]
+        public string EmployeeType
+        {
+            get
+            {
+                if (ExtensionGet("employeeType").Length == 0)
+                {
+                    return null;
+                }
+                return Convert.ToString(ExtensionGet("employeeType")[0]);
+            }
+            set
+            {
+                ExtensionSet("employeeType", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the division
+        /// </summary>
+        /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
+        [DirectoryProperty("division")]
+        public string Division
+        {
+            get
+            {
+                if (ExtensionGet("division").Length == 0)
+                {
+                    return null;
+                }
+                return Convert.ToString(ExtensionGet("division")[0]);
+            }
+            set
+            {
+                ExtensionSet("division", value);
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the department
         /// </summary>
         /// <returns>A string containing the value of the attribute or null if the attribute does not exist.</returns>
